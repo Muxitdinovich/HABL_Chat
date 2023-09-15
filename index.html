@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+	<link rel="icon" href="ico.ico" type="img/x-icon" />
+	<title>HABL Chat</title>
+	
+	<style>
+		body {
+			background: #05d1ff;
+		}
+	</style>
+</head>
+<body>
+	
+	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+		<h5 class="my-0 mr-md-auto">HABL Chat</h5>
+		<nav class="my-2 my-md-0 mr-md-3">
+			<a class="p-2 text-dark" href="https://realbusiness.nicepage.io/">Real Business Academy</a>
+		</nav>
+	</div>
+	
+	<div class="container">
+		<div class="py-5 text-center">
+			<h2>HABL Chat</h2>
+			<p class="lead">Ismingizni kiriting va suhbatni boshlang</p>
+		</div>
+		<div class="row">
+			<div class="col-6">
+				
+				<h3>Xabar shakli</h3>
+				<form id="messForm">
+					<label for="name">Ism</label>
+					<input type="text" name="name" id="name" placeholder="Ismingizni kiriting" class="form-control">
+					<br>
+					<label for="message">Xabar</label>
+					<textarea name="message" id="message" class="form-control" placeholder="Xabaringizni kiriting"></textarea>
+					<br>
+					<input type="submit" value="Yuborish" class="btn btn-danger">
+				</form>
+			</div>
+			<div class="col-6">
+				<h3>Xabarlar</h3>
+				
+				<div id="all_mess"></div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		
+		var min = 1;
+		var max = 6;
+		var random = Math.floor(Math.random() * (max - min)) + min;
+
+		
+		var alertClass;
+		switch (random) {
+			case 1:
+				alertClass = 'secondary';
+				break;
+			case 2:
+				alertClass = 'danger';
+				break;
+			case 3:
+				alertClass = 'success';
+				break;
+			case 4:
+				alertClass = 'warning';
+				break;
+			case 5:
+				alertClass = 'info';
+				break;
+			case 6:
+				alertClass = 'light';
+				break;
+		}
+
+		
+		$(function() {
+			
+			var socket = io.connect();
+			
+			var $form = $("#messForm");
+			var $name = $("#name"); 
+			var $textarea = $("#message"); 
+			var $all_messages = $("#all_mess"); 
+
+			
+			$form.submit(function(event) {
+				
+				event.preventDefault();
+				
+				socket.emit('send mess', {mess: $textarea.val(), name: $name.val(), className: alertClass});
+				
+				$textarea.val('');
+			});
+
+			
+			socket.on('add mess', function(data) {
+				
+				$all_messages.append("<div class='alert alert-" + data.className + "'><b>" + data.name + "</b>: " + data.mess + "</div>");
+			});
+
+		});
+	</script>
+</body>
+</html>
