@@ -1,6 +1,6 @@
 # HABL-Chat
-Download Node js: https://nodejs.org/en/download
-Socket : https://socket.io/
+<p>Download Node js: https://nodejs.org/en/download</p>
+<P></P>Socket : https://socket.io/</p>
 <pre>
   git clone https://github.com/Muxitdinovich/HABL_Chat.git
   cd HABL_Chat
